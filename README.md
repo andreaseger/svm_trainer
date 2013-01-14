@@ -1,6 +1,15 @@
 # SvmTrainer
 
-TODO: Write a gem description
+**This is broken at the moment due to not fully ported dependencies**
+
+Collection of methods to train a libsvm like SVM.
+
+- Linear Search for a linear kernel
+- Grid Search for a RBF kernel
+- DesignOfExperiments Heuristic for a RBF kernel
+- Nelder-Mead Heuristic for a RBF kernel
+
+Also see [SvmHelper](https://github.com/sch1zo/svm_helper)
 
 ## Installation
 
@@ -18,7 +27,10 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Create a Object for one of the Algorithms and provide it with a Array of FeatureVectors.
+The `search` should do everything on its own and provide a nicely trained SVM.
+In addition search provides a list of all intermediate results from the parameter search.
+
 
 ## Contributing
 
