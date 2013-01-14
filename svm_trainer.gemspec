@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = SvmTrainer::VERSION
   gem.authors       = ["Andreas Eger"]
   gem.email         = ["dev@eger-andreas.de"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Collection of methods to train a libsvm like SVM}
+  gem.summary       = %q{Linear Search, Grid Search, DoE Heuristic, Nelder-Mead Heuristic}
   gem.homepage      = ""
 
   gem.add_dependency "celluloid"
