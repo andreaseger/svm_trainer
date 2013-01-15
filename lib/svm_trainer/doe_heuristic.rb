@@ -37,8 +37,8 @@ module Trainer
         futures = []
         parameter.each do |cost, gamma|
           # was this parameter pair already tested?
-          params = {cost: 2**cost, gamma: 2**gamma}
-          next if results.has_key?(params)
+          params = ParameterSet.new(gamma, cost)
+          next if results.has_key?(params.key)
 
           # n-fold cross validation
           folds.each.with_index do |fold,index|
@@ -65,7 +65,7 @@ module Trainer
       return model, results
     end
     def format_results results
-      results.map{ |k,v| "#{Math.log2(k[:cost])} #{Math.log2(k[:gamma])} #{v}" }.join "\n"
+      results.map{ |k,v| "#{k[:cost]} #{k[:gamma]} #{v}" }.join "\n"
     end
   end
 end

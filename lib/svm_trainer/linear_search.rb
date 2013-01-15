@@ -28,7 +28,7 @@ module Trainer
 
       futures = []
       @costs.each do |cost|
-        params = {cost: 2**cost, kernel: :linear}
+        params = ParameterSet.new(nil, cost, :linear)
         # n-fold cross validation
         folds.each.with_index do |fold,index|
           # start async SVM training  | ( trainings_set, parameter, validation_sets)
@@ -41,7 +41,7 @@ module Trainer
       results = collect_results(futures)
 
       # get the pair with the best value
-      best_parameter = results.invert[results.values.max]
+      best_parameter = ParameterSet.from_key results.invert[results.values.max]
 
       model = train_svm feature_vectors, best_parameter
       return model, results

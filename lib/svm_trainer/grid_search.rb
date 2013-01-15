@@ -28,7 +28,7 @@ module Trainer
       futures = []
       @gammas.each do |gamma|
         @costs.each do |cost|
-          params = {cost: 2**cost, gamma: 2**gamma}
+          params = ParameterSet.new(gamma, cost)
           # n-fold cross validation
           folds.each.with_index do |fold,index|
             # start async SVM training  | ( trainings_set, parameter, validation_sets)
@@ -48,7 +48,7 @@ module Trainer
       return model, results
     end
     def format_results results
-      results.map{ |k,v| [Math.log2(k[:gamma]), "#{Math.log2(k[:cost])} #{Math.log2(k[:gamma])} #{v}"] }
+      results.map{ |k,v| [k[:gamma], "#{k[:cost]} #{k[:gamma]} #{v}"] }
              .group_by{|e| e[0]}.values.map{|e| e.map{|f| f[1]}.join("\n")}.join "\n\n"
     end
   end

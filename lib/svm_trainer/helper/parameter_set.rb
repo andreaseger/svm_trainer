@@ -6,42 +6,73 @@ module Trainer
   #
   class ParameterSet
     include Comparable
-    attr_accessor :gamma, :cost
+    attr_accessor :gamma, :cost, :kernel
     attr_accessor :result
-    def initialize(gamma, cost)
+    def self.from_key(key)
+      new(key[:gamma], key[:cost], key[:kernel])
+    end
+    def initialize(gamma, cost, kernel=:rbf)
       @gamma = gamma
       @cost = cost
+      @kernel = kernel
     end
-    def +(other)
-      self.class.new(self.gamma + other.gamma, self.cost + other.cost)
+   def key
+      {gamma: gamma, cost: cost, kernel: kernel}
     end
-    def -(other)
-      self.class.new(self.gamma - other.gamma, self.cost - other.cost)
+    def key2
+      {gamma: 2**gamma, cost: 2**cost, kernel: kernel}
     end
-    def *(other)
-      case other
-      when ParameterSet
-        self.class.new(self.gamma * other.gamma, self.cost * other.cost)
-      else
-        self.class.new(self.gamma * other, self.cost * other)
-      end
-    end
-    def /(other)
-      case other
-      when ParameterSet
-        self.class.new(self.gamma / other.gamma, self.cost / other.cost)
-      else
-        self.class.new(self.gamma / other, self.cost / other)
-      end
+    def to_parameter
+      kernel_class =  case self.kernel
+                      when :linear
+                        Parameter::LINEAR
+                      when :rbf
+                        Parameter::RBF
+                      else
+                        Parameter::RBF
+                      end
+
+      Parameter.new(svm_type: Parameter::C_SVC,
+                    kernel_type: kernel_class,
+                    cost: 2**self.cost,
+                    gamma: 2**self.gamma,
+                    probability: 1)
     end
     def to_a
       [gamma, cost]
     end
+    def to_s
+      "gamma: #{gamma} | cost: #{cost} | kernel: #{kernel}"
+    end
+
+    #
+    # Comparable Mixin
     def <=>(other)
       self.result <=> other.result
     end
-    def key
-      {gamma: gamma, cost: cost}
+
+    # looks a little bit of messy but can't be done with define_method
+    # only alternative would be to write this method 4 times
+    %w(+ - * /).each do |op|
+      eval <<-END_RUBY
+        def #{op}(other)
+          case other
+          when ParameterSet
+            self.class.new(self.gamma.to_f #{op} other.gamma, self.cost.to_f #{op} other.cost, self.kernel)
+          else
+            self.class.new(self.gamma.to_f #{op} other, self.cost.to_f #{op} other, self.kernel)
+          end
+        end
+      END_RUBY
+    end
+    #
+    # enables calculations with numbers without having to care about order
+    def coerce(other)
+      if other.is_a? ParameterSet
+        [self, other]
+      else
+        [ParameterSet.new(other, other, self.kernel), self]
+      end
     end
   end
 end

@@ -1,5 +1,4 @@
 require "spec_helper"
-require 'trainer/doe_pattern'
 
 describe Trainer::DoePattern do
   let(:dummy_class) do
@@ -10,7 +9,7 @@ describe Trainer::DoePattern do
 
   let(:center) { [0,0] }
   let(:resolution) { [1,1] }
-  context "#pattern_for_center" do
+  context "pattern_for_center" do
     context "plain" do
       let(:pattern3d) { [[-1,1],[0,1],[1,1],[-1,0],[0,0],[1,0],[-1,-1],[0,-1],[1,-1]] }
       let(:pattern2d) { [[-0.5,0.5],[0.5,0.5],[-0.5,-0.5],[0.5,-0.5]] }
@@ -64,7 +63,7 @@ describe Trainer::DoePattern do
     end
   end
 
-  context "#pattern_for_range" do
+  context "pattern_for_range" do
     let(:x_range) { -1..1 }
     let(:y_range) { -1..1 }
     it "should calculate the center & resolution and call pattern_for_center" do
@@ -72,7 +71,7 @@ describe Trainer::DoePattern do
       dummy_class.pattern_for_range(x_range, y_range)
     end
   end
-  context "#pattern_for_limits" do
+  context "pattern_for_limits" do
     let(:x_limits) { [-1,1] }
     let(:y_limits) { [-1,1] }
     it "should calculate the center & resolution and call pattern_for_center" do

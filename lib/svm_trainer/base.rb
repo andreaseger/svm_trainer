@@ -8,7 +8,6 @@ module Trainer
   # @author Andreas Eger
   #
   class Base
-    include Helper
     # default number of folds to use for cross validation
     DEFAULT_NUMBER_OF_FOLDS = 3
     attr_accessor :number_of_folds
@@ -54,9 +53,9 @@ module Trainer
       values = Hash.new { |h, k| h[k] = [] }
       # get the results and put them into the Hash
       futures.map { |f|
-        model, result = f.value # this is the actual blocking call
+        model, result, params = f.value # this is the actual blocking call
         next if model.nil?
-        values[cost: model.cost, gamma: model.gamma] << result
+        values[params.key] << result
       }
       # calculate means for each parameter pair
       values = values.map{|k,v| {k => v.instance_eval { reduce(:+) / size.to_f }}}

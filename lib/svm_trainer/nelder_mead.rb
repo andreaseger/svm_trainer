@@ -1,5 +1,4 @@
 require_relative 'base'
-require_relative 'helper/parameter_set'
 module Trainer
   #
   # Trainer for a parmeter search using the Nelder-Mead Simplex heurisitc with the RBF kernel
@@ -37,6 +36,7 @@ module Trainer
       initial_simplex
       loop do
         best, worse, worst = order
+        #TODO this line looks ugly, fix it
         center = ParameterSet.new *[best,worse].map(&:to_a).transpose.map{|e| e.inject(&:+)/e.length.to_f}
         reflection = reflect center, worst
         case
@@ -66,10 +66,10 @@ module Trainer
       end
 
       # get the pair with the best value
-      best_parameter = @func.invert[@func.values.max]
+      best_parameter = ParameterSet.from_key @func.invert[@func.values.max]
 
-      binding.pry
-      model = train_svm feature_vectors, params = {cost: 2**best_parameter[:cost], gamma: 2**best_parameter[:gamma]}
+      # binding.pry
+      model = train_svm feature_vectors, best_parameter
       return model, results
     end
 
@@ -145,20 +145,18 @@ module Trainer
       _d <= TOLERANCE**2
     end
 
-    #TODO fix this parameter mess, either use the real(**2) ones everywhere or the other way around
     def func parameter_set
       unless @func.has_key? parameter_set.key
         futures=[]
         # n-fold cross validation
-        params = {cost: 2**parameter_set.cost, gamma: 2**parameter_set.gamma}
         @folds.each.with_index do |fold,index|
           # start async SVM training  | ( trainings_set, parameter, validation_sets)
-          futures << @worker.future.train( fold, params,
+          futures << @worker.future.train( fold, parameter_set,
                                            @folds.select.with_index{|e,ii| index!=ii } )
         end
         # collect results - !blocking!
         # and add result to cache
-        @func[parameter_set.key] = collect_results(futures)[params]
+        @func.merge! collect_results(futures)
       end
       @func[parameter_set.key]
     end
