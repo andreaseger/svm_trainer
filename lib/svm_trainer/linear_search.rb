@@ -28,7 +28,7 @@ module Trainer
 
       futures = []
       @costs.each do |cost|
-        params = ParameterSet.new(nil, cost, :linear)
+        params = ParameterSet.new(0, cost, :linear)
         # n-fold cross validation
         folds.each.with_index do |fold,index|
           # start async SVM training  | ( trainings_set, parameter, validation_sets)

@@ -19,6 +19,7 @@ module Trainer
       super
       @simplex = []
       @func = {}
+      @iterations = 0
     end
 
     #
@@ -134,7 +135,8 @@ module Trainer
     TOLERANCE=10**-2
     #TODO find something better to do here, this either stops to early or will never stop depending on the data
     def done?
-      p 'iteration'
+      p @iterations += 1
+      return true if @iterations >= 30
       return false unless @simplex.permutation(2).map { |e|
           l = Math.sqrt((e[0] - e[1]).to_a.map{ |f| f**2 }.inject(&:+))
           l <= 0.5
