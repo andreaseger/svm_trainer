@@ -3,6 +3,15 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in svm_trainer.gemspec
 gemspec
 
+platform :jruby do
+  gem "svm_toolkit"
+end
+platform :ruby do
+  gem "rb-libsvm", git: 'git://github.com/sch1zo/rb-libsvm.git',
+                   branch: 'custom_stuff',
+                   require: 'libsvm'
+end
+
 group :development do
   gem 'yard'
   gem 'kramdown'
