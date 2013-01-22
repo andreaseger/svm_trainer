@@ -25,14 +25,14 @@ module SvmTrainer
     def to_parameter
       kernel_type =  case self.kernel
                       when :linear
-                        KernelType::LINEAR
+                        Libsvm::KernelType::LINEAR
                       when :rbf
-                        KernelType::RBF
+                        Libsvm::KernelType::RBF
                       else
-                        KernelType::RBF
+                        Libsvm::KernelType::RBF
                       end
 
-      SvmParameter.new(svm_type: SvmType::C_SVC,
+      Libsvm::SvmParameter.new(svm_type: Libsvm::SvmType::C_SVC,
                     kernel_type: kernel_type,
                     cost: 2**self.cost,
                     gamma: 2**self.gamma,

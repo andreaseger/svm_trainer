@@ -1,9 +1,9 @@
 require "spec_helper"
 
-describe Trainer::DoePattern do
+describe SvmTrainer::DoePattern do
   let(:dummy_class) do
     Class.new do
-      extend(Trainer::DoePattern)
+      extend(SvmTrainer::DoePattern)
     end
   end
 

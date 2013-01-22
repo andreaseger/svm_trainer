@@ -1,12 +1,9 @@
 require 'spec_helper'
 
-class Svm
-end
-
-describe Trainer::Worker do
-  let(:worker) { Trainer::Worker.new(evaluator: nil) }
+describe SvmTrainer::Worker do
+  let(:worker) { SvmTrainer::Worker.new(evaluator: nil) }
   before(:each) do
-    Svm.stubs(:svm_train)
+    Libsvm::Model.stubs(:train)
   end
   context "train" do
     let(:params) { OpenStruct.new(to_parameter: {gamma: 2}) }
@@ -14,11 +11,11 @@ describe Trainer::Worker do
       worker.wrapped_object.stubs(:evaluate).returns [:model, :results]
     end
     it "should call svm_train" do
-      Svm.expects(:svm_train)
+      Libsvm::Model.expects(:train)
       worker.train(:trainings_set, params, [22,33])
     end
     it "should pass the params to svm_train" do
-      Svm.expects(:svm_train).with(:trainings_set, params.to_parameter)
+      Libsvm::Model.expects(:train).with(:trainings_set, params.to_parameter)
       worker.train(:trainings_set, params, [22,33])
     end
     it "should return three things" do

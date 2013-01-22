@@ -3,6 +3,12 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in svm_trainer.gemspec
 gemspec
 
+# gem "jrb-libsvm", git: 'git://github.com/sch1zo/jrb-libsvm.git',
+#   require: 'libsvm', platforms: :jruby
+
+gem "rb-libsvm",  git: 'git://github.com/sch1zo/rb-libsvm.git', branch: 'custom_stuff',
+  require: 'libsvm', platforms: :ruby
+
 group :development do
   gem 'yard'
   gem 'kramdown'
@@ -18,6 +24,7 @@ group :development do
 end
 
 group :test do
+  gem 'pry'
   gem 'rake'
   gem 'mocha', require: 'mocha/api'
 end
