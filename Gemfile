@@ -4,9 +4,9 @@ source 'https://rubygems.org'
 gemspec
 
 if RUBY_PLATFORM == 'java'
-  gem "jrb-libsvm", git: 'git://github.com/sch1zo/jrb-libsvm.git', require: 'libsvm', platforms: :jruby
+  gem "jrb-libsvm", github: 'sch1zo/jrb-libsvm', require: 'libsvm', platforms: :jruby
 else
-  gem "rb-libsvm",  git: 'git://github.com/sch1zo/rb-libsvm.git', branch: 'custom_stuff', require: 'libsvm', platforms: :ruby
+  gem "rb-libsvm",  github: 'sch1zo/rb-libsvm', branch: 'custom_stuff', require: 'libsvm', platforms: :ruby
 end
 
 group :development do
