@@ -1,5 +1,9 @@
 require "svm_trainer/version"
-require 'libsvm'
+if RUBY_PLATFORM == 'java'
+  require 'jrb-libsvm'
+else
+  require 'libsvm'
+end
 
 module SvmTrainer
   include Libsvm

@@ -9,6 +9,19 @@ Collection of methods to train a libsvm like SVM.
 
 Also see [SvmHelper](https://github.com/sch1zo/svm_helper)
 
+## Dependencies
+
+You need one of these two libsvm wrapper installed.
+- [rb-libsvm][] with branch `custom_stuff` [original rb-libsvm][]
+- [jrb-libsvm][]
+
+ideally you just add the following to your Gemfile:
+
+``` ruby
+gem "rb-libsvm", github: 'sch1zo/rb-libsvm', branch: 'custom_stuff', require: 'libsvm', platforms: :ruby
+gem "jrb-libsvm", '>= 0.1.0', github: 'sch1zo/jrb-libsvm', platforms: :jruby
+```
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -37,3 +50,8 @@ In addition search provides a list of all intermediate results from the paramete
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+
+[rb-libsvm]:    https://github.com/sch1zo/rb-libsvm
+[original rb-libsvm]:    https://github.com/febeling/rb-libsvm
+[jrb-libsvm]:    https://github.com/sch1zo/jrb-libsvm

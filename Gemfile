@@ -3,11 +3,8 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in svm_trainer.gemspec
 gemspec
 
-if RUBY_PLATFORM == 'java'
-  gem "jrb-libsvm", github: 'sch1zo/jrb-libsvm', require: 'libsvm', platforms: :jruby
-else
-  gem "rb-libsvm",  github: 'sch1zo/rb-libsvm', branch: 'custom_stuff', require: 'libsvm', platforms: :ruby
-end
+gem "rb-libsvm", github: 'sch1zo/rb-libsvm', branch: 'custom_stuff', require: 'libsvm', platforms: :ruby
+gem "jrb-libsvm", '>= 0.1.0', github: 'sch1zo/jrb-libsvm', platforms: :jruby
 
 group :development do
   gem 'yard'
