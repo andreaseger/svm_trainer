@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["dev@eger-andreas.de"]
   gem.description   = %q{Collection of methods to train a libsvm like SVM}
   gem.summary       = %q{Linear Search, Grid Search, DoE Heuristic, Nelder-Mead Heuristic}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/sch1zo/svm_trainer"
 
   gem.add_dependency "celluloid"
 
