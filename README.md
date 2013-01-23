@@ -1,7 +1,5 @@
 # SvmTrainer
 
-**This is broken at the moment due to not fully ported dependencies**
-
 Collection of methods to train a libsvm like SVM.
 
 - Linear Search for a linear kernel
