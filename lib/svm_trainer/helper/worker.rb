@@ -21,7 +21,7 @@ module SvmTrainer
     #
     # @return [model, results, params] libsvm model and merged results of the validation sets
     def train trainings_set, params, folds
-      evaluate(Libsvm::Model.train(trainings_set, params.to_parameter), folds) << params
+      evaluate(Model.train(trainings_set, params.to_parameter), folds) << params
     # rescue
     #   #TODO find out why this happens, seems to be something with the trainings_set inside the libsvm training
     #   p "error on #{trainings_set}|#{params}"

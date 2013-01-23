@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe SvmTrainer::Worker do
-  let(:worker) { SvmTrainer::Worker.new(evaluator: nil) }
+describe Worker do
+  let(:worker) { Worker.new(evaluator: nil) }
   before(:each) do
     Libsvm::Model.stubs(:train)
   end

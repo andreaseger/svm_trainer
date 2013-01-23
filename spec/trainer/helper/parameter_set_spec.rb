@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe SvmTrainer::ParameterSet do
-  let(:one) { SvmTrainer::ParameterSet.new(7,3) } # 7,3
-  let(:other) { SvmTrainer::ParameterSet.new(5,5) } # 5,5
+describe ParameterSet do
+  let(:one) { ParameterSet.new(7,3) } # 7,3
+  let(:other) { ParameterSet.new(5,5) } # 5,5
   context "math" do
     it "converts all paramter to floats on usage" do
       r = (one+0)
@@ -79,7 +79,7 @@ describe SvmTrainer::ParameterSet do
     end
   end
   context "to_parameter" do
-    let(:parameterset) { SvmTrainer::ParameterSet.new(2,3,:rbf) }
+    let(:parameterset) { ParameterSet.new(2,3,:rbf) }
     it "should return a SvmParameter" do
       parameterset.to_parameter.should be_a(Libsvm::SvmParameter)
     end

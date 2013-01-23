@@ -1,9 +1,9 @@
 require "spec_helper"
 
-describe SvmTrainer::Base do
-  let(:base) { SvmTrainer::Base.new(costs: 2, gamma: 23) }
+describe Base do
+  let(:base) { Base.new(costs: 2, gamma: 23) }
   before(:each) do
-    SvmTrainer::Base.any_instance.stubs(:build_problem)
+    Base.any_instance.stubs(:build_problem)
   end
   def future(result, key)
     OpenStruct.new(
