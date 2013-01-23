@@ -1,4 +1,4 @@
-module Trainer
+module SvmTrainer
   module DoePattern
     # 1=max, -1=min, 0=center, resolution=|0->1|
     #     3^d pattern         #      2^d pattern

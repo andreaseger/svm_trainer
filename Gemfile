@@ -3,13 +3,10 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in svm_trainer.gemspec
 gemspec
 
-platform :jruby do
-  gem "svm_toolkit"
-end
-platform :ruby do
-  gem "rb-libsvm", git: 'git://github.com/sch1zo/rb-libsvm.git',
-                   branch: 'custom_stuff',
-                   require: 'libsvm'
+if RUBY_PLATFORM == 'java'
+  gem "jrb-libsvm", git: 'git://github.com/sch1zo/jrb-libsvm.git', require: 'libsvm', platforms: :jruby
+else
+  gem "rb-libsvm",  git: 'git://github.com/sch1zo/rb-libsvm.git', branch: 'custom_stuff', require: 'libsvm', platforms: :ruby
 end
 
 group :development do
@@ -27,6 +24,7 @@ group :development do
 end
 
 group :test do
+  gem 'pry'
   gem 'rake'
   gem 'mocha', require: 'mocha/api'
 end

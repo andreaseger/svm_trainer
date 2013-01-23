@@ -1,5 +1,5 @@
 require_relative 'base'
-module Trainer
+module SvmTrainer
   #
   # Trainer for a linear parmeter search with a LINEAR kernel
   #
@@ -47,7 +47,7 @@ module Trainer
       return model, results
     end
     def format_results results
-      results.map{ |k,v| [Math.log2(k[:gamma]), "#{Math.log2(k[:cost])} #{Math.log2(k[:gamma])} #{v}"] }
+      results.map{ |k,v| [k[:gamma], "#{k[:cost]} #{k[:gamma]} #{v}"] }
              .group_by{|e| e[0]}.values.map{|e| e.map{|f| f[1]}.join("\n")}.join "\n\n"
     end
   end

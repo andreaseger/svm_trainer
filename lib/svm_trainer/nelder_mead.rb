@@ -1,5 +1,5 @@
 require_relative 'base'
-module Trainer
+module SvmTrainer
   #
   # Trainer for a parmeter search using the Nelder-Mead Simplex heurisitc with the RBF kernel
   #

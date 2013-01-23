@@ -1,6 +1,6 @@
 require_relative 'base'
 require_relative 'helper/doe_pattern'
-module Trainer
+module SvmTrainer
   #
   # Trainer for a parmeter search using a DOE heurisitc with the RBF kernel
   #
@@ -56,10 +56,10 @@ module Trainer
 
         p "best #{best}: #{results.values.max}"
         # get new search window
-        parameter, resolution = pattern_for_center [Math.log2(best[:cost]),Math.log2(best[:gamma])], resolution.map{|e| e/Math.sqrt(2)}, [costs, gammas]
+        parameter, resolution = pattern_for_center [best[:cost],best[:gamma]], resolution.map{|e| e/Math.sqrt(2)}, [costs, gammas]
       end
 
-      best_parameter = results.invert[results.values.max]
+      best_parameter = ParameterSet.from_key results.invert[results.values.max]
       # retrain the model with the best results and all of the available data
       model = train_svm feature_vectors, best_parameter
       return model, results

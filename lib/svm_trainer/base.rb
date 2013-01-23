@@ -1,7 +1,7 @@
 require 'celluloid'
 require_relative 'helper/worker'
 
-module Trainer
+module SvmTrainer
   #
   # Trainer Base Class
   #
@@ -71,30 +71,12 @@ module Trainer
 
     def train_svm feature_vector, params
       feature_set = build_problem feature_vector
-      Svm.svm_train(feature_set, build_parameter(params) )
+      Model.train(feature_set, params.to_parameter )
     end
 
     def build_problem set
-      Problem.from_array(set.map(&:data), set.map(&:label))
-    end
-
-    def build_parameter args
-      cost = args[:cost]
-      gamma = args[:gamma]
-      kernel =  case args[:kernel]
-                when :linear
-                  Parameter::LINEAR
-                when :rbf
-                  Parameter::RBF
-                else
-                  Parameter::RBF
-                end
-
-      Parameter.new(svm_type: Parameter::C_SVC,
-                    kernel_type: kernel,
-                    cost: cost,
-                    gamma: gamma,
-                    probability: 1)
+      p = Problem.new
+      p.tap{|e| e.set_examples(set.map(&:label), set.map(&:data))}
     end
   end
 end

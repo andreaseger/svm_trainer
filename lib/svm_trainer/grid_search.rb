@@ -1,5 +1,5 @@
 require_relative 'base'
-module Trainer
+module SvmTrainer
   #
   # Trainer for a grid parmeter search with the RBF kernel
   #
@@ -42,7 +42,7 @@ module Trainer
       results = collect_results(futures)
 
       # get the pair with the best value
-      best_parameter = results.invert[results.values.max]
+      best_parameter = ParameterSet.from_key results.invert[results.values.max]
 
       model = train_svm feature_vectors, best_parameter
       return model, results

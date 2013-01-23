@@ -1,4 +1,4 @@
-module Trainer
+module SvmTrainer
   #
   # ParameterSet for the NelderMead
   #
@@ -23,17 +23,17 @@ module Trainer
       {gamma: 2**gamma, cost: 2**cost, kernel: kernel}
     end
     def to_parameter
-      kernel_class =  case self.kernel
+      kernel_type =  case self.kernel
                       when :linear
-                        Parameter::LINEAR
+                        KernelType::LINEAR
                       when :rbf
-                        Parameter::RBF
+                        KernelType::RBF
                       else
-                        Parameter::RBF
+                        KernelType::RBF
                       end
 
-      Parameter.new(svm_type: Parameter::C_SVC,
-                    kernel_type: kernel_class,
+      SvmParameter.new(svm_type: SvmType::C_SVC,
+                    kernel_type: kernel_type,
                     cost: 2**self.cost,
                     gamma: 2**self.gamma,
                     probability: 1)

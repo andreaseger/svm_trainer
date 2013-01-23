@@ -7,6 +7,7 @@ module Evaluator
   class OverallAccuracy
   end
 end
+include SvmTrainer
 
 RSpec.configure do |config|
   config.mock_with :mocha

@@ -1,12 +1,12 @@
 require "spec_helper"
 
-describe Trainer::NelderMead do
-  let(:trainer) { Trainer::NelderMead.new({}) }
+describe NelderMead do
+  let(:trainer) { NelderMead.new({}) }
   before(:each) do
     trainer.stubs(:func).returns(1)
   end
   def params(g,c)
-    Trainer::ParameterSet.new(g,c)
+    ParameterSet.new(g,c)
   end
   context "reflect" do
     let(:center) { params(5,5) }
