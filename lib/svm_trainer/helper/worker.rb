@@ -36,9 +36,10 @@ module SvmTrainer
     #
     # @return [model, results] libsvm model and merged results
     def evaluate model, folds
+      evaluator = @evaluator.new(model)
       result = folds.map{ |fold|
-        model.evaluate_dataset(fold, :evaluator => @evaluator)
-      }.map(&:value).reduce(&:+) / folds.count
+        evaluator.dup.evaluate_dataset(fold)
+      }.reduce(&:+) / folds.count
       return [model, result]
     end
   end

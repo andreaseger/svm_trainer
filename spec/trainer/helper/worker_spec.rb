@@ -1,7 +1,17 @@
 require 'spec_helper'
 
+class DummyModel
+  def classes
+    2
+  end
+  def predict(arg)
+    rand
+  end
+end
+
+
 describe Worker do
-  let(:worker) { Worker.new(evaluator: nil) }
+  let(:worker) { Worker.new(evaluator: Evaluator::OverallAccuracy) }
   before(:each) do
     Libsvm::Model.stubs(:train)
   end
@@ -23,18 +33,18 @@ describe Worker do
     end
   end
   context "evaluate" do
-    let(:model) { mock('model') }
+    let(:model) { DummyModel.new }
     let(:folds) { [:a,:b,:c] }
     before(:each) do
-      model.stubs(:evaluate_dataset).returns(OpenStruct.new(value: 42))
+      Evaluator::OverallAccuracy.any_instance.expects(:evaluate_dataset).times(3).returns(rand)
     end
     it "should call evaluate_dataset on the model for each fold" do
-      model.expects(:evaluate_dataset).times(3).returns(OpenStruct.new(value: 42))
       worker.evaluate(model, folds)
     end
     it "should calculate the mean of each fold's result" do
       _,result = worker.evaluate(model, folds)
-      result.should == 42
+      result.should be_a Float
+      result.should be_between(0,1)
     end
   end
 end
