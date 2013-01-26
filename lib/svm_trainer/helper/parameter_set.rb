@@ -6,6 +6,7 @@ module SvmTrainer
   #
   class ParameterSet
     include Comparable
+    include Libsvm
     attr_accessor :gamma, :cost, :kernel
     attr_accessor :result
     def self.from_key(key)

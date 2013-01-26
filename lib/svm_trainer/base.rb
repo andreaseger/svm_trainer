@@ -8,6 +8,7 @@ module SvmTrainer
   # @author Andreas Eger
   #
   class Base
+    include Libsvm
     # default number of folds to use for cross validation
     DEFAULT_NUMBER_OF_FOLDS = 3
     attr_accessor :number_of_folds
@@ -28,7 +29,7 @@ module SvmTrainer
       @results = {}
       @costs = args.fetch(:costs) { -5..15 }
       @gammas = args.fetch(:gammas) { -15..9 }
-      @evaluator = args.fetch(:evaluator, ::Evaluator::OverallAccuracy)
+      @evaluator = args.fetch(:evaluator, Evaluator::OverallAccuracy)
       @number_of_folds = args.fetch(:number_of_folds) { DEFAULT_NUMBER_OF_FOLDS }
     end
 
@@ -75,8 +76,8 @@ module SvmTrainer
     end
 
     def build_problem set
-      p = Problem.new
-      p.tap{|e| e.set_examples(set.map(&:label), set.map(&:data))}
+      problem = Problem.new
+      problem.tap{|p| p.set_examples(set.map(&:label), set.map{|e| Node.features(e.data)})}
     end
   end
 end
