@@ -3,10 +3,11 @@ module SvmTrainer
     class Base
       include Comparable
       attr_accessor :model
-      def initialize(model)
+      def initialize(model, verbose = false)
         @model = model
         @correct = 0
         @total = 0
+        @verbose = verbose
       end
       def evaluate_dataset(data)
         return 0.0 if data.l.zero?
