@@ -37,7 +37,8 @@ module SvmTrainer
                     kernel_type: kernel_type,
                     cost: 2**self.cost,
                     gamma: 2**self.gamma,
-                    probability: 1)
+                    probability: 1,
+                    cache_size: 64)
     end
     def to_a
       [gamma, cost]
