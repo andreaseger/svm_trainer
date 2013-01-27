@@ -14,6 +14,7 @@ module SvmTrainer
       end
       def result
         return 0.0 if @total.zero?
+        p @store
         @result ||= @store.select{|e| e[:total] > 0 }
                                     .reduce(1){|a,e| a*(e[:correct].quo(e[:total]))} ** (1.quo(model.classes))
       end
