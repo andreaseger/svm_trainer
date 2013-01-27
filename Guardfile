@@ -1,4 +1,4 @@
-guard 'rspec', cli: "--color --format d", all_after_pass: false do
+guard 'rspec', cli: "--color --format d", all_after_pass: false, rvm:['ruby-1.9.3-p362@svm_trainer', 'jruby-1.7.2@svm_trainer'] do
   watch(%r{^spec/.+_spec\.rb$})
   watch('lib/svm_trainer.rb')            { 'spec' }
   watch(%r{^lib/svm_trainer/(.+)\.rb$})               { |m| "spec/#{m[1]}_spec.rb" }

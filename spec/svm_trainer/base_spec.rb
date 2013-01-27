@@ -44,7 +44,7 @@ describe Base do
     end
   end
   context "build_problem" do
-    let(:set) { [OpenStruct.new(data:[1,0,0], label: 0),OpenStruct.new(data:[1,1,1], label: 1),OpenStruct.new(data:[1,0,1], label: 1)] }
+    let(:set) { Array.new(3){DummyVector.new} }
     it "should not fail" do
       ->{base.send(:build_problem,set)}.should_not raise_error
     end

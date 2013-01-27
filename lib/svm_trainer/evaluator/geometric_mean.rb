@@ -4,7 +4,7 @@ module SvmTrainer
     class GeometricMean < Base
       def initialize(model)
         super
-        @store = model.classes.times.map{|e| {total: 0, correct: 0} }
+        @store = Array.new(model.classes) { {total: 0, correct: 0} }
       end
       def add(actual, prediction)
         super()

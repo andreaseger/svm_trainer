@@ -17,7 +17,7 @@ module SvmTrainer
     # train a SVM and evaluate it against the list of validation sets
     # @param  trainings_set [Problem] libsvm Problem
     # @param  params [ParameterSet] gamma, cost, kernel
-    # @param  folds [Array] List of validation sets
+    # @param  folds [Array<Array<FeatureVector>>] List of validation sets
     #
     # @return [model, results, params] libsvm model and merged results of the validation sets
     def train trainings_set, params, folds
@@ -32,7 +32,7 @@ module SvmTrainer
     #
     # evaluate the SVM for all validation sets and merge the results
     # @param  model libsvm Model
-    # @param  folds [Array] validation sets
+    # @param  folds [Array<Array<FeatureVector>>] validation sets
     #
     # @return [model, results] libsvm model and merged results
     def evaluate model, folds

@@ -9,12 +9,12 @@ module SvmTrainer
         @total = 0
       end
       def evaluate_dataset(data)
-        labels, examples = data.examples
-        return 0.0 if labels.nil? || labels.empty?
+        return 0.0 if data.l.zero?
 
-        labels.each.with_index do |label,i|
+        labels, examples = data.examples
+        data.l.times do |i|
           prediction = model.predict(examples[i])
-          add(label, prediction)
+          add(labels[i], prediction)
         end
         return result
       end

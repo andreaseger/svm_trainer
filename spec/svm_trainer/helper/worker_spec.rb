@@ -1,15 +1,5 @@
 require 'spec_helper'
 
-class DummyModel
-  def classes
-    2
-  end
-  def predict(arg)
-    rand
-  end
-end
-
-
 describe Worker do
   let(:worker) { Worker.new(evaluator: Evaluator::OverallAccuracy) }
   before(:each) do
@@ -34,7 +24,7 @@ describe Worker do
   end
   context "evaluate" do
     let(:model) { DummyModel.new }
-    let(:folds) { [:a,:b,:c] }
+    let(:folds) { Array.new(3){Libsvm::Problem.new} }
     before(:each) do
       Evaluator::OverallAccuracy.any_instance.expects(:evaluate_dataset).times(3).returns(rand)
     end
