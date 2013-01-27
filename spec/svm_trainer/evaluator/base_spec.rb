@@ -12,7 +12,7 @@ end
 describe Evaluator::Base do
   let(:model) { DummyModel.new }
   let(:evaluator) { Evaluator::Base.new(model) }
-  let(:data) { OpenStruct.new(l: 3, x: [1,2,3], y: [9,8,7]) }
+  let(:data) { OpenStruct.new(examples: [[1,0,1],[34,65,12]] ) }
   it "should not fail" do
     Evaluator::Base.any_instance.stubs(:add)
     Evaluator::Base.any_instance.stubs(:result)
