@@ -45,7 +45,7 @@ module SvmTrainer
       best_parameter = ParameterSet.from_key results.invert[results.values.max]
 
       model = train_svm feature_vectors, best_parameter
-      return model, results
+      return model, results, best_parameter
     end
     def format_results results
       results.map{ |k,v| [k[:gamma], "#{k[:cost]} #{k[:gamma]} #{v}"] }
