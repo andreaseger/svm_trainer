@@ -51,5 +51,8 @@ describe Base do
     it 'should create a libsvm problem' do
       base.send(:build_problem,set).should be_a(Libsvm::Problem)
     end
+    it 'should create a libsvm problem with 3 Features' do
+      base.send(:build_problem,set).l.should == 3
+    end
   end
 end
