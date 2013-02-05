@@ -64,8 +64,8 @@ module SvmTrainer
       Hash[*values.map(&:to_a).flatten]
     end
 
-    def format_results(results)
-      results.to_json
+    def format_results results
+      results.map{ |k,v| "#{k[:cost]} #{k[:gamma]} #{v}" }.join "\n"
     end
 
     private

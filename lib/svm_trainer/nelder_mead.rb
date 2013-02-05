@@ -18,7 +18,6 @@ module SvmTrainer
     def initialize args
       super
       @simplex = []
-      @func = {}
       @iterations = 0
     end
 
@@ -68,7 +67,7 @@ module SvmTrainer
       end
 
       # get the pair with the best value
-      best_parameter = ParameterSet.from_key @func.invert[@func.values.max]
+      best_parameter = ParameterSet.from_key results.invert[results.values.max]
 
       # binding.pry
       model = train_svm feature_vectors, best_parameter
@@ -149,7 +148,7 @@ module SvmTrainer
     end
 
     def func parameter_set
-      unless @func.has_key? parameter_set.key
+      unless @results.has_key? parameter_set.key
         futures=[]
         # n-fold cross validation
         @folds.each.with_index do |fold,index|
@@ -159,9 +158,9 @@ module SvmTrainer
         end
         # collect results - !blocking!
         # and add result to cache
-        @func.merge! collect_results(futures)
+        @results.merge! collect_results(futures)
       end
-      @func[parameter_set.key]
+      @results[parameter_set.key]
     end
   end
 end

@@ -64,8 +64,5 @@ module SvmTrainer
       model = train_svm feature_vectors, best_parameter
       return model, results, best_parameter
     end
-    def format_results results
-      results.map{ |k,v| "#{k[:cost]} #{k[:gamma]} #{v}" }.join "\n"
-    end
   end
 end
