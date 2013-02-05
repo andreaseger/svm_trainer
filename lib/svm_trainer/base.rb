@@ -37,7 +37,7 @@ module SvmTrainer
     # splits the feature_vectors in equally sized parts
     # @param  feature_vectors [Array<FeatureVector>]
     #
-    # @return [Array<Array<FeatureVector>>]
+    # @return [Array<Libsvm::Problem>]
     def make_folds feature_vectors
       feature_vectors.each_slice(feature_vectors.size/number_of_folds).map do |set|
         build_problem set

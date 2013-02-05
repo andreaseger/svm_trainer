@@ -8,8 +8,8 @@ module SvmTrainer
       end
       def add(actual, prediction)
         super()
-        @store[prediction][:total] += 1
-        @store[prediction][:correct] += 1 if actual == prediction
+        @store[actual][:total] += 1
+        @store[actual][:correct] += 1 if actual == prediction
         self
       end
       def result

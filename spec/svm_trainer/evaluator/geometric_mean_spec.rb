@@ -21,7 +21,7 @@ describe Evaluator::GeometricMean do
   end
   it "should be 0.0 if one class is not once correct" do
     evaluator.add(1,1)
-    evaluator.add(1,0)
+    evaluator.add(0,1)
     evaluator.result.should == 0.0
   end
   it "should calcuate the correct mean for three entries" do

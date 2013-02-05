@@ -7,7 +7,7 @@ module SvmTrainer
   #
   class NelderMead < Base
     # default number of iterations to use during parameter search
-    DEFAULT_MAX_ITERATIONS=3
+    DEFAULT_MAX_ITERATIONS=20
     def name
       "Nelder-Mead Simplex Heuristic with #{number_of_folds}-fold cross validation"
     end
@@ -29,6 +29,7 @@ module SvmTrainer
     # @return [model, results] trained svm model and the results of the search
     def search feature_vectors, max_iterations=DEFAULT_MAX_ITERATIONS
       # split feature_vectors into folds
+      @max_iterations = max_iterations
       @folds = make_folds feature_vectors
 
       # create Celluloid Threadpool
@@ -136,7 +137,7 @@ module SvmTrainer
     #TODO find something better to do here, this either stops to early or will never stop depending on the data
     def done?
       p "iteration: #{@iterations += 1}"
-      return true if @iterations >= 30
+      return true if @iterations >= @max_iterations
       return false unless @simplex.permutation(2).map { |e|
           l = Math.sqrt((e[0] - e[1]).to_a.map{ |f| f**2 }.inject(&:+))
           l <= 0.5
