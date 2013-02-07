@@ -7,6 +7,7 @@ module SvmTrainer
   class ParameterSet
     include Comparable
     include Libsvm
+    CACHESIZE = ENV['SVM_CACHESIZE'] || 64
     attr_accessor :gamma, :cost, :kernel
     attr_accessor :result
     def self.from_key(key)
@@ -17,7 +18,7 @@ module SvmTrainer
       @cost = cost
       @kernel = kernel
     end
-   def key
+    def key
       {gamma: gamma, cost: cost, kernel: kernel}
     end
     def key2
@@ -38,7 +39,7 @@ module SvmTrainer
                     cost: 2**self.cost,
                     gamma: 2**self.gamma,
                     probability: 1,
-                    cache_size: 64)
+                    cache_size: CACHESIZE)
     end
     def to_a
       [gamma, cost]
