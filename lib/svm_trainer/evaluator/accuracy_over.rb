@@ -11,7 +11,7 @@ module SvmTrainer
           labels, examples = data.examples
           data.l.times do |i|
             prediction,probability = model.predict_probability(examples[i])
-            add(labels[i], prediction, probability)
+            add(labels[i], prediction, probability.max)
           end
           return result
         end
