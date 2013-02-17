@@ -5,6 +5,10 @@ module SvmTrainer
       Class.new(Base) do
         @@min_probability = min_probability
 
+        def initialize(args)
+          super
+          @correct_over = 0
+        end
         def evaluate_dataset(data)
           return 0.0 if data.l.zero?
 
@@ -15,7 +19,7 @@ module SvmTrainer
           end
           return result
         end
-        def add(actual, prediction, probability)
+        def add(actual, prediction, probability=@@min_probability)
           super()
           @correct += 1 if actual == prediction
           @correct_over += 1 if actual == prediction && probability >= @@min_probability
