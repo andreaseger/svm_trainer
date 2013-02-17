@@ -1,7 +1,7 @@
 require_relative 'base'
 module SvmTrainer
   module Evaluator
-    def AccuracyOver min_probability
+    def Evaluator.AccuracyOver min_probability
       Class.new(Base) do
         @@min_probability = min_probability
 
