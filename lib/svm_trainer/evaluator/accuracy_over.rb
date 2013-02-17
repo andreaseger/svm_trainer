@@ -5,7 +5,7 @@ module SvmTrainer
       Class.new(Base) do
         @@min_probability = min_probability
 
-        def initialize(args)
+        def initialize(model, verbose=false)
           super
           @correct_over = 0
         end
