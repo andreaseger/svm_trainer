@@ -21,13 +21,13 @@ module SvmTrainer
         end
         def add(actual, prediction, probability=@@min_probability)
           super()
-          @correct += 1 if actual =! prediction
-          @correct_over += 1 if actual =! prediction && probability >= @@min_probability
+          @correct += 1 if actual != prediction
+          @correct_over += 1 if actual != prediction && probability >= @@min_probability
           self
         end
         def result
           return 0.0 if @total.zero?
-          p({correct: @correct, correct_over: @correct_over, total: @total, min_probability: @@min_probability}) if @verbose
+          p({false: @correct, false_over: @correct_over, total: @total, min_probability: @@min_probability}) if @verbose
           @result ||= @correct_over / @total.to_f
         end
       end
