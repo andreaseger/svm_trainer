@@ -12,7 +12,7 @@ Also see [SvmHelper](https://github.com/sch1zo/svm_helper)
 ## Dependencies
 
 You need one of these two libsvm wrapper installed.
-- [rb-libsvm][] with branch `custom_stuff` [original rb-libsvm][]
+- [rb-libsvm][] ( a custom fork of the [original rb-libsvm][] )
 - [jrb-libsvm][]
 
 ideally you just add the following to your Gemfile:
