@@ -17,8 +17,8 @@ module SvmTrainer
         if @verbose
           p @store
           if @store.count == 2
-            p "false positives: #{1 - @store[0][:correct].quo(@store[0][:total])}"
-            p "false negatives: #{1 - @store[1][:correct].quo(@store[1][:total])}"
+            p "false positives: #{1 - (@store[0][:correct]/@store[0][:total])}"
+            p "false negatives: #{1 - (@store[1][:correct]/@store[1][:total])}"
           end
         end
         @result ||= @store.select{|e| e[:total] > 0 }
