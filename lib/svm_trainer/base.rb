@@ -33,7 +33,7 @@ module SvmTrainer
       @number_of_folds = args.fetch(:number_of_folds) { DEFAULT_NUMBER_OF_FOLDS }
     end
 
-    def search
+    def search(feature_vectors)
       # create Celluloid Threadpool
       @worker = Worker.pool(args: [{evaluator: @evaluator}] )
       @folds = make_folds feature_vectors
