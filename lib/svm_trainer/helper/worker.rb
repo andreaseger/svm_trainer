@@ -9,7 +9,7 @@ module SvmTrainer
     include Celluloid
 
     def initialize args={}
-      @evaluator = args[:evaluator]
+      @evaluator_type = args[:evaluator]
     end
 
 
@@ -36,7 +36,7 @@ module SvmTrainer
     #
     # @return [model, results] libsvm model and merged results
     def evaluate model, folds
-      evaluator = @evaluator.new(model)
+      evaluator = Evaluator::AllInOne.new(model, @evaluator_type)
       result = folds.map{ |fold|
         evaluator.dup.evaluate_dataset(fold)
       }.reduce(&:+) / folds.count

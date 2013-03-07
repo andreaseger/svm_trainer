@@ -24,14 +24,10 @@ module SvmTrainer
     #
     # @return [model, results] trained svm model and the results of the search
     def search feature_vectors, max_iterations=DEFAULT_MAX_ITERATIONS
-      # split feature_vectors into folds
-      folds = make_folds feature_vectors
+      super(feature_vectors)
 
       # initialize iteration parameters and resolution
       parameter, resolution = pattern_for_range costs, gammas
-
-      # create Celluloid Threadpool
-      worker = Worker.pool(args: [{evaluator: @evaluator}] )
 
       max_iterations.times do
         futures = []
@@ -41,10 +37,10 @@ module SvmTrainer
           next if results.has_key?(params.key)
 
           # n-fold cross validation
-          folds.each.with_index do |fold,index|
+          @folds.each.with_index do |fold,index|
             # start async SVM training  | ( trainings_set, parameter, validation_sets)
-            futures << worker.future.train( fold, params,
-                                            folds.select.with_index{|e,ii| index!=ii } )
+            futures << @worker.future.train( fold, params,
+                                            @folds.select.with_index{|e,ii| index!=ii } )
           end
         end
 

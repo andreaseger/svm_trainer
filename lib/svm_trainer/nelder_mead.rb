@@ -27,12 +27,8 @@ module SvmTrainer
     #
     # @return [model, results] trained svm model and the results of the search
     def search feature_vectors, max_iterations=DEFAULT_MAX_ITERATIONS
-      # split feature_vectors into folds
+      super(feature_vectors)
       @max_iterations = max_iterations
-      @folds = make_folds feature_vectors
-
-      # create Celluloid Threadpool
-      @worker = Worker.pool(args: [{evaluator: @evaluator}] )
 
       initial_simplex
       loop do

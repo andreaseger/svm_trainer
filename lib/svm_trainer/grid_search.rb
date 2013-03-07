@@ -19,21 +19,17 @@ module SvmTrainer
     #
     # @return [model, results] trained svm model and the results of the search
     def search feature_vectors,_
-      # split feature_vectors into folds
-      folds = make_folds feature_vectors
-
-      # create Celluloid Threadpool
-      worker = Worker.pool(args: [{evaluator: @evaluator}] )
+      super(feature_vectors)
 
       futures = []
       @gammas.each do |gamma|
         @costs.each do |cost|
           params = ParameterSet.new(gamma, cost)
           # n-fold cross validation
-          folds.each.with_index do |fold,index|
+          @folds.each.with_index do |fold,index|
             # start async SVM training  | ( trainings_set, parameter, validation_sets)
-            futures << worker.future.train( fold, params,
-                                            folds.select.with_index{|e,ii| index!=ii } )
+            futures << @worker.future.train( fold, params,
+                                            @folds.select.with_index{|e,ii| index!=ii } )
           end
         end
       end

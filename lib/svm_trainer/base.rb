@@ -29,10 +29,15 @@ module SvmTrainer
       @results = {}
       @costs = args.fetch(:costs) { -5..15 }
       @gammas = args.fetch(:gammas) { -15..9 }
-      @evaluator = args.fetch(:evaluator, Evaluator::OverallAccuracy)
+      @evaluator = args.fetch(:evaluator, :overall_accuracy)
       @number_of_folds = args.fetch(:number_of_folds) { DEFAULT_NUMBER_OF_FOLDS }
     end
 
+    def search
+      # create Celluloid Threadpool
+      @worker = Worker.pool(args: [{evaluator: @evaluator}] )
+      @folds = make_folds feature_vectors
+    end
     #
     # splits the feature_vectors in equally sized parts
     # @param  feature_vectors [Array<FeatureVector>]
