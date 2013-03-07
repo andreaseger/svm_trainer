@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Worker do
-  let(:worker) { Worker.new(evaluator: Evaluator::OverallAccuracy) }
+  let(:worker) { Worker.new(evaluator: :overall_accuracy) }
   before(:each) do
     Libsvm::Model.stubs(:train)
   end
@@ -26,7 +26,7 @@ describe Worker do
     let(:model) { DummyModel.new }
     let(:folds) { Array.new(3){Libsvm::Problem.new} }
     before(:each) do
-      Evaluator::OverallAccuracy.any_instance.expects(:evaluate_dataset).times(3).returns(rand)
+      Evaluator::AllInOne.any_instance.expects(:evaluate_dataset).times(3).returns(rand)
     end
     it "should call evaluate_dataset on the model for each fold" do
       worker.evaluate(model, folds)

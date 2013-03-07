@@ -2,13 +2,13 @@ require_relative 'base'
 module SvmTrainer
   module Evaluator
     class AllInOne < Base
-      def initialize(model, default_result=:geometric_mean verbose=false)
+      def initialize(model, default_result=:geometric_mean, verbose=false)
         super(model, verbose)
         @default = default_result
         @store = []
       end
 
-      def add(actual, prediction, probability)
+      def add(actual, prediction, probability=0.0)
         super()
         @store << [actual, prediction, probability]
         self
@@ -46,8 +46,7 @@ module SvmTrainer
       def overall_accuracy
         return 0.0 if @total.zero?
         @overall_accuracy ||=
-          ratio( { total: @store.count, correct: @store.select{|e| e[0]==e[1]}.count }
-                 , true )
+          ratio( { total: @store.count, correct: @store.select{|e| e[0]==e[1]}.count }, true )
       end
 
       #
@@ -57,7 +56,7 @@ module SvmTrainer
       def histogram
         return [] if @total.zero?
         @histogram ||= Hash[@store.select{|e| e[0]==e[1]}
-                                  .group_by{|e| (e/0.05).to_i }.sort
+                                  .group_by{|e| (e[2]/0.05).to_i }.sort
                                   .map{|i,e| [(i*0.05).round(2), e.size]} ]
       end
 
@@ -68,7 +67,7 @@ module SvmTrainer
       def faulty_histogram
         return [] if @total.zero?
         @histogram ||= Hash[@store.select{|e| e[0]!=e[1]}
-                                  .group_by{|e| (e/0.05).to_i }.sort
+                                  .group_by{|e| (e[2]/0.05).to_i }.sort
                                   .map{|i,e| [(i*0.05).round(2), e.size]} ]
       end
 

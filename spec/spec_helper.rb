@@ -12,6 +12,9 @@ class DummyModel
   def predict(arg)
     rand
   end
+  def predict_probability(arg)
+    [1,[rand, rand]]
+  end
 end
 
 class DummyVector

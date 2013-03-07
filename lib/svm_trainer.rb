@@ -14,7 +14,7 @@ require "svm_trainer/nelder_mead"
 require 'svm_trainer/evaluator/all_in_one'
 
 require "svm_trainer/evaluator/overall_accuracy"
-require "svm_trainer/evaluator/geometric_mean"
+# require "svm_trainer/evaluator/geometric_mean"
 # require "svm_trainer/evaluator/accuracy_over"
 # require "svm_trainer/evaluator/accuracy_over_false"
 
