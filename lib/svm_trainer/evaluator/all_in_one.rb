@@ -66,7 +66,7 @@ module SvmTrainer
       # @return [Hash] histogram
       def faulty_histogram
         return [] if @total.zero?
-        @histogram ||= Hash[@store.select{|e| e[0]!=e[1]}
+        @faulty_histogram ||= Hash[@store.select{|e| e[0]!=e[1]}
                                   .group_by{|e| (e[2]/0.05).to_i }.sort
                                   .map{|i,e| [(i*0.05).round(2), e.size]} ]
       end
