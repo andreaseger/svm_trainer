@@ -30,7 +30,7 @@ module SvmTrainer
       parameter, resolution = pattern_for_range costs, gammas
 
       max_iterations.times do
-        futures = []
+        values = Hash.new { |h, k| h[k] = [] }
         parameter.each do |cost, gamma|
           # was this parameter pair already tested?
           params = ParameterSet.new(gamma, cost)
@@ -39,13 +39,17 @@ module SvmTrainer
           # n-fold cross validation
           @folds.each.with_index do |fold,index|
             # start async SVM training  | ( trainings_set, parameter, validation_sets)
-            futures << @worker.future.train( fold, params,
-                                            @folds.select.with_index{|e,ii| index!=ii } )
+            model, result, params = @worker.train( fold, params,
+                                                   @folds.select.with_index{|e,ii| index!=ii } )
+            next if model.nil?
+            values[params.key] << result
           end
         end
 
-        # collect results - !blocking!
-        results.merge! collect_results(futures)
+        # calculate means for each parameter pair
+        values = values.map{|k,v| {k => v.instance_eval { reduce(:+) / size.to_f }}}
+        # flatten array of hashed into one hash
+        results.merge! Hash[*values.map(&:to_a).flatten]
 
         # get the pair with the best value
         best = results.invert[results.values.max]

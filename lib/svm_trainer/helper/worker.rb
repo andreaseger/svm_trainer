@@ -1,4 +1,3 @@
-require 'celluloid'
 module SvmTrainer
   #
   # Celluloid Worker Actor, which trains and evaluates a SVM
@@ -6,7 +5,6 @@ module SvmTrainer
   # @author Andreas Eger
   #
   class Worker
-    include Celluloid
 
     def initialize args={}
       @evaluator_type = args[:evaluator]
