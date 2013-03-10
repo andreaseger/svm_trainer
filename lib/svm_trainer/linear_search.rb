@@ -28,7 +28,7 @@ module SvmTrainer
         # n-fold cross validation
         @folds.each.with_index do |fold,index|
           # start async SVM training  | ( trainings_set, parameter, validation_sets)
-          model, result, params = @worker.train( fold, params,
+          model, result, _ = @worker.train( fold, params,
                                                 @folds.select.with_index{|e,ii| index!=ii } )
           next if model.nil?
           values[params.key] << result
