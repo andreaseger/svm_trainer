@@ -105,7 +105,6 @@ describe Evaluator::AllInOne do
       evaluator.add(1,1,0.61).add(1,1,0.63).add(1,1,0.81).add(0,0,0.93)
       evaluator.add(1,1,0.66).add(1,1,0.62).add(1,1,0.74).add(0,0,0.94)
       evaluator.full_histogram.should == {5 => 2, 15 => 1, 25 => 1, 30 => 1, 35 => 3, 60 => 3, 65 => 1, 70 => 1, 80 => 1, 90 => 2}
-      p evaluator.full_histogram
     end
   end
 end
