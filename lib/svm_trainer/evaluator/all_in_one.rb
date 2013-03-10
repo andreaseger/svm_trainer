@@ -54,10 +54,10 @@ module SvmTrainer
       #
       # @return [Hash] histogram
       def histogram
-        return [] if @total.zero?
+        return {} if @total.zero?
         @histogram ||= Hash[@store.select{|e| e[0]==e[1]}
                                   .group_by{|e| (e[2]/0.05).to_i }.sort
-                                  .map{|i,e| [(i*0.05).round(2), e.size]} ]
+                                  .map{|i,e| [i*5, e.size]} ]
       end
 
       #
@@ -65,10 +65,15 @@ module SvmTrainer
       #
       # @return [Hash] histogram
       def faulty_histogram
-        return [] if @total.zero?
+        return {} if @total.zero?
         @faulty_histogram ||= Hash[@store.select{|e| e[0]!=e[1]}
                                   .group_by{|e| (e[2]/0.05).to_i }.sort
-                                  .map{|i,e| [(i*0.05).round(2), e.size]} ]
+                                  .map{|i,e| [i*5, e.size]} ]
+      end
+
+      def full_histogram
+        return {} if @total.zero?
+        Hash[faulty_histogram.map{|k,v| [95-k,v]} ].merge histogram
       end
 
       #
