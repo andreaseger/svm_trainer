@@ -11,6 +11,8 @@ require "svm_trainer/grid_search"
 require "svm_trainer/doe_heuristic"
 require "svm_trainer/nelder_mead"
 
+require "svm_trainer/by_parameter"
+
 require 'svm_trainer/evaluator/all_in_one'
 
 require "svm_trainer/evaluator/overall_accuracy"

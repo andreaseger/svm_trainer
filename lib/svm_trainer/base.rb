@@ -24,7 +24,7 @@ module SvmTrainer
     # @option args [Evaluator] :evaluator (::Evaluator::OverallAccuracy) in `::Evaluator::OverallAccuracy`, `::Evaluator::GeometricMean`
     # @option args [Integer] :number_of_folds (DEFAULT_NUMBER_OF_FOLDS) how many folds to make
     #
-    def initialize args
+    def initialize args={}
       @results = {}
       @costs = args.fetch(:costs) { -5..15 }
       @gammas = args.fetch(:gammas) { -15..9 }

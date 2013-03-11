@@ -15,7 +15,7 @@ module SvmTrainer
       "nelder_mead"
     end
 
-    def initialize args
+    def initialize args={}
       super
       @simplex = []
       @iterations = 0
