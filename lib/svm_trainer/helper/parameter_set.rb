@@ -18,6 +18,9 @@ module SvmTrainer
       @cost = cost
       @kernel = kernel
     end
+    def self.real(gamma, cost, kernel=:rbf)
+      new(Math.log2(gamma), Math.log2(cost), kernel)
+    end
     def key
       {gamma: gamma, cost: cost, kernel: kernel}
     end
@@ -35,11 +38,11 @@ module SvmTrainer
                       end
 
       SvmParameter.new(svm_type: SvmType::C_SVC,
-                    kernel_type: kernel_type,
-                    cost: 2**self.cost,
-                    gamma: 2**self.gamma,
-                    probability: 1,
-                    cache_size: CACHESIZE)
+                      kernel_type: kernel_type,
+                      cost: 2**self.cost,
+                      gamma: 2**self.gamma,
+                      probability: 1,
+                      cache_size: CACHESIZE)
     end
     def to_a
       [gamma, cost]
