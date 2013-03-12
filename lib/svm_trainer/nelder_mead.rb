@@ -15,7 +15,7 @@ module SvmTrainer
       "nelder_mead"
     end
 
-    def initialize args
+    def initialize args={}
       super
       @simplex = []
       @iterations = 0
@@ -131,7 +131,7 @@ module SvmTrainer
     TOLERANCE=10**-2
     #TODO find something better to do here, this either stops to early or will never stop depending on the data
     def done?
-      p "iteration: #{@iterations += 1}"
+      puts "iteration: #{@iterations += 1}"
       return true if @iterations >= @max_iterations
       return false unless @simplex.permutation(2).map { |e|
           l = Math.sqrt((e[0] - e[1]).to_a.map{ |f| f**2 }.inject(&:+))
@@ -145,16 +145,19 @@ module SvmTrainer
 
     def func parameter_set
       unless @results.has_key? parameter_set.key
-        futures=[]
+        values = Hash.new { |h, k| h[k] = [] }
         # n-fold cross validation
         @folds.each.with_index do |fold,index|
           # start async SVM training  | ( trainings_set, parameter, validation_sets)
-          futures << @worker.future.train( fold, parameter_set,
-                                           @folds.select.with_index{|e,ii| index!=ii } )
+          model, result, _ = @worker.train( fold, parameter_set,
+                                                 @folds.select.with_index{|e,ii| index!=ii } )
+          next if model.nil?
+          values[parameter_set.key] << result
         end
-        # collect results - !blocking!
-        # and add result to cache
-        @results.merge! collect_results(futures)
+        # calculate means for each parameter pair
+        values = values.map{|k,v| {k => v.instance_eval { reduce(:+) / size.to_f }}}
+        # flatten array of hashed into one hash
+        @results.merge! Hash[*values.map(&:to_a).flatten]
       end
       @results[parameter_set.key]
     end

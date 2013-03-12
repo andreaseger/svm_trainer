@@ -12,8 +12,6 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{Linear Search, Grid Search, DoE Heuristic, Nelder-Mead Heuristic}
   gem.homepage      = "https://github.com/sch1zo/svm_trainer"
 
-  gem.add_dependency "celluloid"
-
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})

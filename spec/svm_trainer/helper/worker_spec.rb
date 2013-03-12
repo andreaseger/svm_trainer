@@ -8,7 +8,8 @@ describe Worker do
   context "train" do
     let(:params) { OpenStruct.new(to_parameter: {gamma: 2}) }
     before(:each) do
-      worker.wrapped_object.stubs(:evaluate).returns [:model, :results]
+      # worker.wrapped_object.stubs(:evaluate).returns [:model, :results]
+      worker.stubs(:evaluate).returns [:model, :results]
     end
     it "should call svm_train" do
       Libsvm::Model.expects(:train)
