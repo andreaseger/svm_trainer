@@ -40,6 +40,36 @@ module SvmTrainer
       end
 
       #
+      # calculates false_positives
+      # means original was false but verifier thought they were correct
+      #
+      # @return [Flaot] false_positives
+      def false_positives
+        return 0.0 if @total.zero?
+        if @false_positives
+          @false_positives
+        else
+          faulty = @store.select{|e| e[0] == 0 }
+          @false_positives = faulty.select{|e| e[1] == 1}.count.quo(faulty.count)
+        end
+      end
+
+      #
+      # calculates false_negatives
+      # means original was correct but verifier thought they were false
+      #
+      # @return [Float] false_negatives
+      def false_negatives
+        return 0.0 if @total.zero?
+        if @false_positives
+          @false_positives
+        else
+          faulty = @store.select{|e| e[0] == 1 }
+          @false_positives = faulty.select{|e| e[1] == 0}.count.quo(faulty.count)
+        end
+      end
+
+      #
       # calculates overall accuracy
       #
       # @return [Float] overall accuracy
@@ -71,6 +101,10 @@ module SvmTrainer
                                   .map{|i,e| [i*5, e.size]} ]
       end
 
+      #
+      # merged results of correct and faulty histograms
+      #
+      # @return [Hash] histogram
       def full_histogram
         return {} if @total.zero?
         Hash[faulty_histogram.map{|k,v| [95-k,v]} ].merge histogram
@@ -86,6 +120,18 @@ module SvmTrainer
             .reduce(1){|a,e| a*e[2]} ** 1.quo(@store.select{|e| e[0]==e[1]}.count)
       end
 
+      def metrics
+        {
+          geometric_mean: geometric_mean,
+          false_positives: false_positives,
+          false_negatives: false_negatives,
+          overall_accuracy: overall_accuracy,
+          mean_probability: mean_probability,
+          correct_historgramm: histogram,
+          faulty_histogram: faulty_histogram,
+          full_histogram: full_histogram
+        }
+      end
       private
       def ratio obj, as_float=false
         ratio = obj[:correct].quo(obj[:total])
