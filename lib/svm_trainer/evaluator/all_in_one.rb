@@ -2,6 +2,7 @@ require_relative 'base'
 module SvmTrainer
   module Evaluator
     class AllInOne < Base
+      attr_accessor :store
       def initialize(model, default_result=:geometric_mean, verbose=false)
         super(model, verbose)
         @default = default_result
