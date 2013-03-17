@@ -61,11 +61,11 @@ module SvmTrainer
       # @return [Float] false_negatives
       def false_negatives
         return 0.0 if @total.zero?
-        if @false_positives
-          @false_positives
+        if @false_negatives
+          @false_negatives
         else
-          faulty = @store.select{|e| e[0] == 1 }
-          @false_positives = faulty.select{|e| e[1] == 0}.count.quo(faulty.count)
+          correct = @store.select{|e| e[0] == 1 }
+          @false_negatives = correct.select{|e| e[1] == 0}.count.quo(correct.count)
         end
       end
 
@@ -85,9 +85,9 @@ module SvmTrainer
       # @return [Hash] histogram
       def histogram
         return {} if @total.zero?
-        @histogram ||= Hash[@store.select{|e| e[0]==e[1]}
-                                  .group_by{|e| (e[2]/0.05).to_i }.sort
-                                  .map{|i,e| [i*5, e.size]} ]
+        @histogram ||= @store.select{|e| e[0]==e[1]}
+                              .group_by{|e| (e[2]/0.05).to_i }.sort
+                              .map{|i,e| [i*5, e.size]}
       end
 
       #
@@ -96,9 +96,9 @@ module SvmTrainer
       # @return [Hash] histogram
       def faulty_histogram
         return {} if @total.zero?
-        @faulty_histogram ||= Hash[@store.select{|e| e[0]!=e[1]}
-                                  .group_by{|e| (e[2]/0.05).to_i }.sort
-                                  .map{|i,e| [i*5, e.size]} ]
+        @faulty_histogram ||= @store.select{|e| e[0]!=e[1]}
+                              .group_by{|e| (e[2]/0.05).to_i }.sort
+                              .map{|i,e| [i*5, e.size]}
       end
 
       #
@@ -107,17 +107,18 @@ module SvmTrainer
       # @return [Hash] histogram
       def full_histogram
         return {} if @total.zero?
-        Hash[faulty_histogram.map{|k,v| [95-k,v]} ].merge histogram
+        faulty_histogram.map{|k,v| [95-k,v]}.reverse + histogram
       end
 
       #
       # calculates the mean probability for the correctly predicted entries
       #
-      # @return [Float] geometric mean of all correct probabilities
+      # @return [Float] mean probability
       def mean_probability
         return 0.0 if @total.zero?
         @mean_probability ||= @store.select{|e| e[0]==e[1]}
-            .reduce(1){|a,e| a*e[2]} ** 1.quo(@store.select{|e| e[0]==e[1]}.count)
+                                    .reduce(1){|a,e| a*e[2]} ** 1.quo(@store.select{|e| e[0]==e[1]}.count)
+                                    # .reduce(1){|a,e| a*e[2]} ** (1/(@store.select{|e| e[0]==e[1]}.count.to_f))
       end
 
       def metrics
