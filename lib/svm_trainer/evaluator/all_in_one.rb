@@ -50,7 +50,7 @@ module SvmTrainer
           @false_positives
         else
           faulty = @store.select{|e| e[0] == 0 }
-          @false_positives = faulty.select{|e| e[1] == 1}.count.quo(faulty.count)
+          @false_positives = [faulty.select{|e| e[1] == 1}.count, faulty.count]
         end
       end
 
@@ -65,7 +65,7 @@ module SvmTrainer
           @false_negatives
         else
           correct = @store.select{|e| e[0] == 1 }
-          @false_negatives = correct.select{|e| e[1] == 0}.count.quo(correct.count)
+          @false_negatives = [correct.select{|e| e[1] == 0}.count, correct.count]
         end
       end
 
