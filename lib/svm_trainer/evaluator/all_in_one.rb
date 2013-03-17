@@ -118,8 +118,7 @@ module SvmTrainer
       def mean_probability
         return 0.0 if @total.zero?
         @mean_probability ||= @store.select{|e| e[0]==e[1]}
-                                    .reduce(1){|a,e| a*e[2]} ** 1.quo(@store.select{|e| e[0]==e[1]}.count)
-                                    # .reduce(1){|a,e| a*e[2]} ** (1/(@store.select{|e| e[0]==e[1]}.count.to_f))
+                                    .reduce(0){|a,e| a+e[2]} / (@store.select{|e| e[0]==e[1]}.count)
       end
 
       def metrics
