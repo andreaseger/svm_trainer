@@ -111,7 +111,7 @@ describe Evaluator::AllInOne do
     let(:evaluator) { Evaluator::AllInOne.new(model) }
     it "should calculate the mean of the probabilities" do
       evaluator.add(1,1,0.61).add(1,1,0.63).add(1,1,0.81).add(0,0,0.93)
-      evaluator.mean_probability.should be_within(0.001).of(0.733515)
+      evaluator.mean_probability.should be_within(0.001).of(0.745)
     end
   end
 end
