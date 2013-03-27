@@ -114,4 +114,31 @@ describe Evaluator::AllInOne do
       evaluator.mean_probability.should be_within(0.001).of(0.745)
     end
   end
+  context "Matthews correlation coefficient" do
+    let(:evaluator) { Evaluator::AllInOne.new(model) }
+    it "should return values between -1 and +1" do
+      evaluator.add(1,0).add(0,1).add(1,0).add(1,0)
+      evaluator.add(1,0).add(0,1).add(0,1).add(1,0)
+      evaluator.add(1,1).add(1,1).add(1,1).add(0,0)
+      evaluator.add(1,1).add(1,1).add(1,1).add(0,0)
+      evaluator.mcc.should be_within(1).of(0)
+    end
+    it "should return values between -1 and +1" do
+      evaluator.add(1,0).add(0,1).add(1,0).add(1,0)
+      evaluator.add(1,1).add(1,1).add(1,1).add(0,0)
+      evaluator.mcc.should be_within(1).of(0)
+    end
+    it "should return values between -1 and +1" do
+      evaluator.add(1,0).add(0,1).add(0,1).add(1,0)
+      evaluator.add(1,1).add(1,1).add(1,1).add(0,0)
+      evaluator.mcc.should be_within(1).of(0)
+    end
+    it "should normalize the results to a 0..1 interval" do
+      evaluator.add(1,0).add(0,1).add(1,0).add(1,0)
+      evaluator.add(1,0).add(0,1).add(0,1).add(1,0)
+      evaluator.add(1,1).add(1,1).add(1,1).add(0,0)
+      evaluator.add(1,1).add(1,1).add(1,1).add(0,0)
+      evaluator.normalized_mcc.should be_within(0.5).of(0.5)
+    end
+  end
 end

@@ -159,7 +159,7 @@ module SvmTrainer
         # flatten array of hashed into one hash
         @results.merge! Hash[*values.map(&:to_a).flatten]
       end
-      @results[parameter_set.key]
+      @results[parameter_set.key].to_f
     end
   end
 end

@@ -3,7 +3,7 @@ module SvmTrainer
   module Evaluator
     class AllInOne < Base
       attr_accessor :store
-      def initialize(model, default_result=:geometric_mean, verbose=false)
+      def initialize(model, default_result=:mcc, verbose=false)
         super(model, verbose)
         @default = default_result
         @store = []
@@ -25,6 +25,8 @@ module SvmTrainer
           f_measure
         when :mcc
           mcc
+        when :normalized_mcc
+          normalized_mcc
         when :accuracy
           accuracy
         else
@@ -201,6 +203,10 @@ module SvmTrainer
                             (true_positives + false_negatives) *
                             (true_negatives + false_positives) *
                             (true_negatives + false_negatives) ) )
+      end
+      # move the result of mcc into the interval 0..1
+      def normalized_mcc
+        (mcc+1)/2.0
       end
       def metrics
         {

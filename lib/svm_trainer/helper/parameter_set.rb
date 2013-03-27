@@ -14,6 +14,7 @@ module SvmTrainer
       new(key[:gamma], key[:cost], key[:kernel])
     end
     def initialize(gamma, cost, kernel=:rbf)
+      @result = 0.5 #this equals a random selection
       @gamma = gamma
       @cost = cost
       @kernel = kernel
