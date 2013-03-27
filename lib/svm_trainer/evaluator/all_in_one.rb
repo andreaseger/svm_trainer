@@ -39,7 +39,7 @@ module SvmTrainer
       #
       # @return [Numeric] geometric mean
       def geometric_mean
-        return 0.0 if @total.zero?
+        return 0.5 if @total.zero?
         @geometric_mean ||=
           @store.group_by{|e| e[0]}
                 .map{|i,e| { total: e.count, correct: e.select{|i| i[0]==i[1]}.count} }
@@ -132,13 +132,13 @@ module SvmTrainer
       #
       # @return [Numeric] overall accuracy
       def precision
-        return 0.0 if @total.zero?
+        return 0.5 if @total.zero?
         @precision ||= true_positives.quo(true_positives + false_positives)
       end
       alias_method :recall, :true_positive_rate
 
       def accuracy
-        return 0.0 if @total.zero?
+        return 0.5 if @total.zero?
         @accuracy ||= (true_positives + true_negatives).quo(@store.count)
       end
       #
@@ -186,7 +186,7 @@ module SvmTrainer
       # harmonic mean of precision and recall
       # http://en.wikipedia.org/wiki/F1_score
       def f_measure
-        return 0.0 if @total.zero?
+        return 0.5 if @total.zero?
         @f_measure ||= 2 * (precision * recall).quo(precision + recall)
       end
 
@@ -197,7 +197,7 @@ module SvmTrainer
       # 0 no better than random prediction
       # −1 indicates total disagreement between prediction and observation.
       def mcc
-        return 0.0 if @total.zero?
+        return 0.0 if [@total, true_positives, true_negatives, false_positives, false_negatives].any?(&:zero?)
         @mcc ||= (true_positives * true_negatives - false_positives * false_negatives).quo(
                   Math.sqrt((true_positives + false_positives) *
                             (true_positives + false_negatives) *
@@ -220,6 +220,7 @@ module SvmTrainer
           accuracy: accuracy.to_f,
           f_measure: f_measure.to_f,
           matthews_correlation_coefficient: mcc,
+          normalized_matthews_correlation_coefficient: normalized_mcc,
           mean_probability: mean_probability,
           correct_historgramm: histogram,
           faulty_histogram: faulty_histogram,
