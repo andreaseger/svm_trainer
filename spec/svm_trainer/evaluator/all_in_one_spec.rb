@@ -47,7 +47,7 @@ describe Evaluator::AllInOne do
     end
   end
   context "overall_accuracy" do
-    let(:evaluator) { Evaluator::AllInOne.new(model, :overall_accuracy) }
+    let(:evaluator) { Evaluator::AllInOne.new(model, :accuracy) }
     it "should be zero when no data provided" do
       evaluator.result.should == 0.0
     end
@@ -65,7 +65,7 @@ describe Evaluator::AllInOne do
       evaluator.result.should == 0.5
     end
     context "comparable" do
-      let(:evaluator2) { Evaluator::AllInOne.new(model, :overall_accuracy) }
+      let(:evaluator2) { Evaluator::AllInOne.new(model, :accuracy) }
       before(:each) do
         evaluator.add(1,0).add(1,1).add(1,1).add(0,0)
         evaluator2.add(1,0).add(0,1).add(0,1).add(0,0)

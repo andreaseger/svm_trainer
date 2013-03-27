@@ -19,19 +19,23 @@ module SvmTrainer
         case @default
         when :geometric_mean
           geometric_mean
-        when :overall_accuracy
-          overall_accuracy
-        when :mean_probability
-          mean_probability
+        when :precision
+          precision
+        when :f_measure
+          f_measure
+        when :mcc
+          mcc
+        when :accuracy
+          accuracy
         else
-          geometric_mean
+          mcc
         end
       end
 
       #
       # calculates geometric mean from internal store
       #
-      # @return [Float] geometric mean
+      # @return [Numeric] geometric mean
       def geometric_mean
         return 0.0 if @total.zero?
         @geometric_mean ||=
@@ -44,42 +48,97 @@ module SvmTrainer
       # calculates false_positives
       # means original was false but verifier thought they were correct
       #
-      # @return [Flaot] false_positives
+      # @return [Numeric] false positives
       def false_positives
         return 0.0 if @total.zero?
-        if @false_positives
-          @false_positives
-        else
-          faulty = @store.select{|e| e[0] == 0 }
-          @false_positives = [faulty.select{|e| e[1] == 1}.count, faulty.count]
-        end
+        @false_positives ||= @store.select{|e| e[0] == 0 && e[1] == 1}.count
+      end
+
+      #
+      # calculates the false positives rate
+      # false_positives / count_negatives
+      #
+      # @return [Numeric] false_positive_rate
+      def false_positive_rate
+        return 0.0 if @total.zero?
+        @fpr ||= false_positives.quo(count_negatives)
+      end
+
+      #
+      # calculates true positives
+      # means original was true and agreed
+      #
+      # @return [Numeric] true_positives
+      def true_positives
+        return 0.0 if @total.zero?
+        @true_positives ||= @store.select{|e| e[0] == 1 && e[1] == 1}.count
+      end
+
+      #
+      # calculates true positive rate
+      # true_positives / count_positives
+      #
+      # @return [Numeric] true_positives
+      def true_positive_rate
+        return 0.0 if @total.zero?
+        @tpr ||= true_positives.quo(count_positives)
       end
 
       #
       # calculates false_negatives
       # means original was correct but verifier thought they were false
       #
-      # @return [Float] false_negatives
+      # @return [Numeric] false_negatives
       def false_negatives
         return 0.0 if @total.zero?
-        if @false_negatives
-          @false_negatives
-        else
-          correct = @store.select{|e| e[0] == 1 }
-          @false_negatives = [correct.select{|e| e[1] == 0}.count, correct.count]
-        end
+        @false_negatives ||= @store.select{|e| e[0] == 1 && e[1] == 0}.count
       end
 
       #
-      # calculates overall accuracy
+      # calculates the false_negatives rate
+      # false_negatives / count_positives
       #
-      # @return [Float] overall accuracy
-      def overall_accuracy
+      # @return [Numeric] false_negative_rate
+      def false_negative_rate
         return 0.0 if @total.zero?
-        @overall_accuracy ||=
-          ratio( { total: @store.count, correct: @store.select{|e| e[0]==e[1]}.count }, true )
+        @fnr ||= false_negatives.quo(count_positives)
       end
 
+      #
+      # calculates true negatives
+      # means original was false and verifier agrees
+      #
+      # @return [Numeric] false_negatives
+      def true_negatives
+        return 0.0 if @total.zero?
+        @true_negatives ||= @store.select{|e| e[0] == 0 && e[1] == 0}.count
+      end
+
+      #
+      # calculates the true negative rate
+      # true_negatives / count_negatives
+      #
+      # @return [Numeric] false_negative_rate
+      def true_negative_rate
+        return 0.0 if @total.zero?
+        @tnr ||= true_negatives.quo(count_negatives)
+      end
+
+      #
+      # calculates precision
+      # #correct/#all classified as correct
+      #
+      # @return [Numeric] overall accuracy
+      def precision
+        return 0.0 if @total.zero?
+        @precision ||= true_positives.quo(true_positives + false_positives)
+      end
+      alias_method :recall, :true_positive_rate
+
+      def accuracy
+        return 0.0 if @total.zero?
+        @accuracy ||= (true_positives + true_negatives).quo(@store.count)
+      end
       #
       # generates values for a histogram for the correctly predicted probabilities
       #
@@ -114,19 +173,41 @@ module SvmTrainer
       #
       # calculates the mean probability for the correctly predicted entries
       #
-      # @return [Float] mean probability
+      # @return [Numeric] mean probability
       def mean_probability
         return 0.0 if @total.zero?
         @mean_probability ||= @store.select{|e| e[0]==e[1]}
                                     .reduce(0){|a,e| a+e[2]} / (@store.select{|e| e[0]==e[1]}.count)
       end
 
+      # F1 score
+      # harmonic mean of precision and recall
+      def f_measure
+        return 0.0 if @total.zero?
+        @f_measure ||= 2 * (precision * recall).quo(precision + recall)
+      end
+
+      # Matthews correlation coefficient
+      def mcc
+        return 0.0 if @total.zero?
+        @mcc ||= (true_positives * true_negatives - false_positives * false_negatives).quo(
+                  Math.sqrt((true_positives + false_positives) *
+                            (true_positives + false_negatives) *
+                            (true_negatives + false_positives) *
+                            (true_negatives + false_negatives) ) )
+      end
       def metrics
         {
           geometric_mean: geometric_mean,
-          false_positives: false_positives,
-          false_negatives: false_negatives,
-          overall_accuracy: overall_accuracy,
+          rates: {  fpr: false_positive_rate.to_f,
+                    tpr: true_positive_rate.to_f,
+                    fnr: false_negative_rate.to_f,
+                    tnr: true_negative_rate.to_f },
+          precision: precision,
+          recall: recall,
+          accuracy: accuracy,
+          f_measure: f_measure,
+          matthews_correlation_coefficient: mcc,
           mean_probability: mean_probability,
           correct_historgramm: histogram,
           faulty_histogram: faulty_histogram,
@@ -134,9 +215,15 @@ module SvmTrainer
         }
       end
       private
-      def ratio obj, as_float=false
+      def ratio obj, as_Numeric=false
         ratio = obj[:correct].quo(obj[:total])
-        as_float ? ratio.to_f : ratio
+        as_Numeric ? ratio.to_f : ratio
+      end
+      def count_positives
+        @pos ||= @store.select{|e| e[0] == 1 }.count
+      end
+      def count_negatives
+        @neg ||= @store.select{|e| e[0] == 0 }.count
       end
     end
   end

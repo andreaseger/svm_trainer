@@ -28,7 +28,7 @@ module SvmTrainer
       @results = {}
       @costs = args.fetch(:costs) { -5..15 }
       @gammas = args.fetch(:gammas) { -15..9 }
-      @evaluator = args.fetch(:evaluator, :overall_accuracy)
+      @evaluator = args.fetch(:evaluator, :mcc)
       @number_of_folds = args.fetch(:number_of_folds) { DEFAULT_NUMBER_OF_FOLDS }
     end
 
