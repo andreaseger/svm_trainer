@@ -182,12 +182,18 @@ module SvmTrainer
 
       # F1 score
       # harmonic mean of precision and recall
+      # http://en.wikipedia.org/wiki/F1_score
       def f_measure
         return 0.0 if @total.zero?
         @f_measure ||= 2 * (precision * recall).quo(precision + recall)
       end
 
       # Matthews correlation coefficient
+      # http://en.wikipedia.org/wiki/Matthews_correlation_coefficient
+      # it returns a value between −1 and +1.
+      # +1 represents a perfect prediction
+      # 0 no better than random prediction
+      # −1 indicates total disagreement between prediction and observation.
       def mcc
         return 0.0 if @total.zero?
         @mcc ||= (true_positives * true_negatives - false_positives * false_negatives).quo(
@@ -203,10 +209,10 @@ module SvmTrainer
                     tpr: true_positive_rate.to_f,
                     fnr: false_negative_rate.to_f,
                     tnr: true_negative_rate.to_f },
-          precision: precision,
-          recall: recall,
-          accuracy: accuracy,
-          f_measure: f_measure,
+          precision: precision.to_f,
+          recall: recall.to_f,
+          accuracy: accuracy.to_f,
+          f_measure: f_measure.to_f,
           matthews_correlation_coefficient: mcc,
           mean_probability: mean_probability,
           correct_historgramm: histogram,
