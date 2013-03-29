@@ -13,8 +13,8 @@ describe Evaluator::AllInOne do
   let(:model) { DummyModel.new }
   context "geometric_mean" do
     let(:evaluator) { Evaluator::AllInOne.new(model, :geometric_mean) }
-    it "should be zero when no data provided" do
-      evaluator.result.should == 0.0
+    it "should be .5 when no data provided" do
+      evaluator.result.should == 0.5
     end
     it "should be 1.0 for one correct entry" do
       evaluator.add(1,1)
@@ -46,10 +46,10 @@ describe Evaluator::AllInOne do
       end
     end
   end
-  context "overall_accuracy" do
+  context "accuracy" do
     let(:evaluator) { Evaluator::AllInOne.new(model, :accuracy) }
-    it "should be zero when no data provided" do
-      evaluator.result.should == 0.0
+    it "should be .5 when no data provided" do
+      evaluator.result.should == 0.5
     end
     it "should be 1.0 for one correct entry" do
       evaluator.add(1,1)
