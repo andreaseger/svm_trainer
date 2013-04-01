@@ -136,7 +136,7 @@ module SvmTrainer
       #
       # @return [Numeric] overall accuracy
       def precision
-        return 0.5 if @total.zero?
+        return 0.5 if [@total, true_positives].any?(&:zero?)
         @precision ||= true_positives.quo(true_positives + false_positives)
       end
       alias_method :recall, :true_positive_rate
