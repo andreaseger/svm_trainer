@@ -21,8 +21,12 @@ module SvmTrainer
           geometric_mean
         when :precision
           precision
-        when :f_measure
+        when :f_5
+          f_measure(0.5)
+        when :f1
           f_measure
+        when :f2
+          f_measure(2.0)
         when :mcc
           mcc
         when :normalized_mcc
@@ -182,12 +186,12 @@ module SvmTrainer
                                     .reduce(0){|a,e| a+e[2]} / (@store.select{|e| e[0]==e[1]}.count)
       end
 
-      # F1 score
+      # F-beta score
       # harmonic mean of precision and recall
       # http://en.wikipedia.org/wiki/F1_score
-      def f_measure
+      def f_measure(beta=1.0)
         return 0.5 if @total.zero?
-        @f_measure ||= 2 * (precision * recall).quo(precision + recall)
+        (1+beta**2) * (precision * recall).quo((beta**2) * precision + recall)
       end
 
       # Matthews correlation coefficient
@@ -218,7 +222,9 @@ module SvmTrainer
           precision: precision.to_f,
           recall: recall.to_f,
           accuracy: accuracy.to_f,
-          f_measure: f_measure.to_f,
+          f_5: f_measure(0.5).to_f,
+          f1: f_measure.to_f,
+          f2: f_measure(2.0).to_f,
           matthews_correlation_coefficient: mcc,
           normalized_matthews_correlation_coefficient: normalized_mcc,
           mean_probability: mean_probability,
