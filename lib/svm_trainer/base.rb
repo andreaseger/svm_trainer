@@ -45,7 +45,7 @@ module SvmTrainer
     # @return [Array<Libsvm::Problem>]
     def make_folds feature_vectors
       if number_of_folds == 1
-        build_problem feature_vectors
+        [build_problem(feature_vectors)]
       else
         feature_vectors.each_slice(feature_vectors.size/number_of_folds).map do |set|
           build_problem set
