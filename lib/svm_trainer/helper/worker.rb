@@ -19,7 +19,11 @@ module SvmTrainer
     #
     # @return [model, results, params] libsvm model and merged results of the validation sets
     def train trainings_set, params, folds
-      evaluate(::Libsvm::Model.train(trainings_set, params.to_parameter), folds) << params
+      if folds.empty? # means cross validation is disables -> evaluate with trainings_set
+        evaluate(::Libsvm::Model.train(trainings_set, params.to_parameter), [trainings_set]) << params
+      else
+        evaluate(::Libsvm::Model.train(trainings_set, params.to_parameter), folds) << params
+      end
     # rescue
     #   #TODO find out why this happens, seems to be something with the trainings_set inside the libsvm training
     #   p "error on #{trainings_set}|#{params}"
