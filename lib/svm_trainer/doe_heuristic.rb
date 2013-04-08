@@ -61,6 +61,7 @@ module SvmTrainer
 
       best_parameter = ParameterSet.from_key results.invert[results.values.max]
       # retrain the model with the best results and all of the available data
+      best_parameter.enable_probability!
       model = train_svm feature_vectors, best_parameter
       return model, results, best_parameter
     end

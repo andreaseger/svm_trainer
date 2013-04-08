@@ -65,7 +65,7 @@ module SvmTrainer
       # get the pair with the best value
       best_parameter = ParameterSet.from_key results.invert[results.values.max]
 
-      # binding.pry
+      best_parameter.enable_probability!
       model = train_svm feature_vectors, best_parameter
       return model, results, best_parameter
     end

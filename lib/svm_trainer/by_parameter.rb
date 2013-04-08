@@ -9,6 +9,7 @@ module SvmTrainer
     end
 
     def train feature_vectors, parameter_set
+      parameter_set.enable_probability!
       train_svm feature_vectors, parameter_set
     end
   end

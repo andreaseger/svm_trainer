@@ -18,6 +18,7 @@ module SvmTrainer
       @gamma = gamma
       @cost = cost
       @kernel = kernel
+      @probability = false
     end
     def self.real(gamma, cost, kernel=:rbf)
       new(Math.log2(gamma), Math.log2(cost), kernel)
@@ -42,7 +43,7 @@ module SvmTrainer
                       kernel_type: kernel_type,
                       cost: 2**self.cost,
                       gamma: 2**self.gamma,
-                      probability: 1,
+                      probability: (self.probability? ? 1 : 0),
                       cache_size: CACHESIZE)
     end
     def to_a
@@ -50,6 +51,15 @@ module SvmTrainer
     end
     def to_s
       "gamma: #{gamma} | cost: #{cost} | kernel: #{kernel}"
+    end
+    def probability?
+      @probability
+    end
+    def enable_probability!
+      @probability = true
+    end
+    def disable_probability!
+      @probability = false
     end
 
     #
